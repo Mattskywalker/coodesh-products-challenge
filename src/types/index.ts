@@ -1,0 +1,1 @@
+export type Navigate = (destiny: string) => void
