@@ -1,85 +1,46 @@
-import { createContext, useState, useEffect, ReactNode } from 'react'
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { createContext, ReactNode, useEffect, useState } from 'react'
+import api, { ProductModel } from '../api';
 
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ProductModel } from '../api';
-
-export interface ProductDatabaseScheme {
-  id: string,
-  title: string,
-  type: string,
-  description: string,
-  filename: string,
-  height: number
-  width: number
-  price: number,
-  rating: number,
-  createdAt: string
+interface ProductContextProps {
+  children: ReactNode
 }
 
 interface ProductContextValues {
-  saveProduct: (product: ProductModel) => Promise<ProductDatabaseScheme[] | undefined>,
-  removeProduct: (product: ProductModel)=> Promise<void>,
-  getProductList(): Promise<ProductDatabaseScheme[] | null>,
-  products: ProductDatabaseScheme[]
-}
-
-interface Props {
-  children: ReactNode
+  AllProducts: ProductModel[];
+  loading: boolean;
+  searchProducts: (query: string) => void;
 }
 
 export const ProductsContext = createContext({} as ProductContextValues);
 
-const PRODUCTS_KEY = '@products_key'
+export default function ProductsProvider({children}: ProductContextProps) {
 
-export default function ProductsProvider({children}: Props) {
+  const [AllProducts, setAllProducts] = useState<ProductModel[]>([]);
+  const [resultQueryProducts, setResult] = useState<ProductModel[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const [products, setProductList] = useState<ProductDatabaseScheme[]>([]);
-
-  const fetch = () => {
-    getProductList()
-      .then(data => {
-        setProductList(data || []);
+  const fetchFromFirebase = async () => {
+    setLoading(true);
+    await api.getProductList()
+      .then((data) => {
+        setAllProducts(data);
+        setResult(data);
+        setLoading(false);
       })
   }
 
   useEffect(() => {
-    fetch();
+    fetchFromFirebase()
   }, [])
 
-  async function saveProduct(product: ProductModel) {
-
-    const newDataBaseObject: ProductDatabaseScheme = { ...product, createdAt: new Date().toISOString() }
-
-    const productList = await getProductList();
-    const existThisProduct = (productList?.filter((data) => data.id === product.id) || []).length > 0;
-    if(existThisProduct) {return}
-    const finalData = !!productList ? [...productList, newDataBaseObject] : [newDataBaseObject];
-
-    await AsyncStorage.setItem(PRODUCTS_KEY, JSON.stringify(finalData));
-    setProductList(finalData)
-    return finalData;
+  const searchProducts = (query: string) => {
+    if(query === '') setResult(AllProducts);
+    setResult(AllProducts.filter((data) => data.title.toLowerCase().includes(query.toLowerCase())))
   }
-
-  async function removeProduct(product: ProductModel) {
-    const itens = await getProductList();
-    if(!itens) return;
-    const result = itens.filter((data) => data.id !== product.id);
-    await AsyncStorage.setItem(PRODUCTS_KEY, JSON.stringify(result));
-    setProductList(result);
-    return
-  }
-
-  async function getProductList() {
-    const data = await AsyncStorage.getItem(PRODUCTS_KEY)
-    const result = !!data ? JSON.parse(data) as ProductDatabaseScheme[] : null
-    setProductList(result || [])
-    return result;
-  }
-
+  
   return (
-    <ProductsContext.Provider value={{removeProduct, getProductList, saveProduct, products}}>
+    <ProductsContext.Provider value={{AllProducts: resultQueryProducts, loading, searchProducts}}>
       {children}
     </ProductsContext.Provider>
   )
