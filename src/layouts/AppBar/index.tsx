@@ -1,11 +1,18 @@
 import { StyleSheet } from 'react-native'
-import React from "react";
+import React, { useContext } from "react";
 import { HStack, IconButton, Text, NativeBaseProvider, Center, Box, StatusBar, Input, Stack } from "native-base";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { ProductsContext } from '../../context/ProductsProvider';
 
 export default function AppBar() {
 
+  const {searchProducts} = useContext(ProductsContext)
+
   const iconSize = 26;
+
+  const handleSearch = (query: string) => {
+    searchProducts(query);
+  }
 
   return (
     <>
@@ -17,6 +24,7 @@ export default function AppBar() {
         />
         <Stack flex={1} p={2}>
           <Input
+            onChangeText={(query) => {handleSearch(query)}}
             textAlign={'left'}
             fontSize={'lg'}
             focusOutlineColor={'black'}
