@@ -7,17 +7,15 @@ import { useNavigation } from '@react-navigation/native';
 
 import { Navigate } from '../../types';
 
-import { ProductsContext } from '../../context/ProductsProvider';
+import { UserProductsContext } from '../../context/UserProductsProvider';
 
 export default function UserProductList() {
 
   const navigation = useNavigation();
   const goTo = navigation.navigate as Navigate;
   
-  const {products} = useContext(ProductsContext)
+  const {products} = useContext(UserProductsContext)
   const [loading, setLoading] = useState(false);
-
-
 
   return (
     <Page title='Meus Produtos' >
