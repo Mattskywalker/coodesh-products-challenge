@@ -1,31 +1,16 @@
-import { StyleSheet, ScrollView, SafeAreaView, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { StyleSheet, ScrollView} from 'react-native'
+import React, { useContext, useState } from 'react'
 import Card from '../../components/Card';
-import api, { ProductModel } from '../../api';
 import Page from '../../layouts/Page';
 import { FlatList, Spinner } from 'native-base';
+import { ProductsContext } from '../../context/ProductsProvider';
 
 export default function ListItens() {
 
-  const [AllProducts, setProducts] = useState<ProductModel[]>([]);
-  const [loading, setLoading] = useState(true);
+  const {AllProducts, loading} = useContext(ProductsContext)
   const [productLimit, setProductLimit] = useState(7)
   const products = AllProducts.slice(0, productLimit);
 
-  const fetchProducts = async () => {
-    await api.getProductList()
-      .then((data) => {
-        setProducts([...data]);
-        setLoading(false);
-      });
-
-  }
-
-  useEffect(() => {
-    (async () => {
-      await fetchProducts();
-    })()
-  }, [])
 
   return (
     <Page title='Lista de produtos' >
@@ -42,7 +27,7 @@ export default function ListItens() {
         />
       }
       {loading &&
-        <ScrollView style={{paddingHorizontal: 2}} >
+        <ScrollView style={{ paddingHorizontal: 2 }} >
 
           {Array.from({ length: 8 }).map((_, index) => (
             <Card key={index} loading />
