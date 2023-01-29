@@ -1,11 +1,13 @@
-import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native'
-import React, { useContext, useState, useEffect } from 'react'
+import { StyleSheet, Image, TouchableOpacity } from 'react-native'
+import React, { useContext, useState, useEffect, memo } from 'react'
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { ProductModel } from '../../api';
 import { fcurrency } from '../../utils/formatNumber';
-import { PresenceTransition, Popover, Button, Box, IconButton, Skeleton, HStack, Stack, Text, useToast } from 'native-base';
+import { Popover, Button, Box, IconButton, Skeleton, HStack, Stack, Text, useToast } from 'native-base';
 import { UserProductsContext } from '../../context/UserProductsProvider';
 import AlertModal from '../AlertModal';
+import { useNavigation } from '@react-navigation/native';
+import { Navigate } from '../../types';
 
 interface CardProps {
   product?: ProductModel,
@@ -15,8 +17,9 @@ interface CardProps {
   editPermission?: boolean
 }
 
-export default function Card({ product, loading = false, deletePermission = false, editPermission = false, addPermission = false }: CardProps) {
+function Card({ product, loading = false, deletePermission = false, editPermission = false, addPermission = false }: CardProps) {
 
+  const goTo = useNavigation().navigate as Navigate
   const toast = useToast();
   const { saveProduct, removeProduct } = useContext(UserProductsContext);
 
@@ -80,7 +83,7 @@ export default function Card({ product, loading = false, deletePermission = fals
             <Image
               onError={() => { setImageError(true) }}
               style={{ height: 100, width: 120 }}
-              source={{ uri: `https://firebasestorage.googleapis.com/v0/b/products-coodesh-e062a.appspot.com/o/product-images%2F${product?.filename}?alt=media` }}
+              source={{ uri: product?.filename }}
             />
           </Stack>
         }
@@ -134,7 +137,7 @@ export default function Card({ product, loading = false, deletePermission = fals
                         spinnerPlacement='start'
                         isLoading={buttonEditLoading}
                         isLoadingText={'Editar'}
-                        onPress={() => { }}
+                        onPress={() => {goTo('Editar', {product: product}) }}
                         style={styles.button}
                         leftIcon={<Icon size={24} color={'white'} name='pencil' />}
                         size={'lg'}
@@ -171,7 +174,7 @@ export default function Card({ product, loading = false, deletePermission = fals
               <Icon color={loading ? "#EDEDED" : "#6558F5"} name='star' size={16} />
               <Icon color={loading ? "#EDEDED" : "#6558F5"} name='star' size={16} />
             </HStack>
-            {!loading && <Text variant='h5' >{`R$${fcurrency(product?.price || 0)}`}</Text>}
+            {!loading && <Text variant='h5' >{`R$ ${fcurrency(product?.price && product?.price / 100)}`}</Text>}
             {loading && <Skeleton width={78} height={8} />}
           </HStack>
         </Stack >
@@ -230,3 +233,5 @@ const styles = StyleSheet.create({
     // paddingHorizontal: 16
   }
 });
+
+export default memo(Card);

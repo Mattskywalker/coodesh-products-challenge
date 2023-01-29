@@ -4,14 +4,17 @@ import { HStack, IconButton, Text, NativeBaseProvider, Center, Box, StatusBar, I
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { ProductsContext } from '../../context/ProductsProvider';
 
-export default function AppBar() {
+interface AppBarProps {
+  searchMethod?(query: string): void,
+  searchLabel?: string
+}
 
-  const {searchProducts} = useContext(ProductsContext)
+export default function AppBar({searchMethod, searchLabel}: AppBarProps) {
 
   const iconSize = 26;
 
   const handleSearch = (query: string) => {
-    searchProducts(query);
+    searchMethod && searchMethod(query);
   }
 
   return (
@@ -29,7 +32,7 @@ export default function AppBar() {
             fontSize={'lg'}
             focusOutlineColor={'black'}
             colorScheme={'black'}
-            placeholder='Pesquisar produtos...'
+            placeholder={searchLabel}
             color={'black'}
             variant='underlined'
             style={styles.textInput}

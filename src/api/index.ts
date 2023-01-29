@@ -1,5 +1,5 @@
 import { dataBase } from './firebase'
-import { collection, getDocs, addDoc, getDoc, doc, query, Query, limit, startAt, orderBy } from "firebase/firestore"
+import { collection, getDocs, addDoc, getDoc, doc} from "firebase/firestore"
 
 export interface ProductModel {
     id: string;
@@ -10,9 +10,10 @@ export interface ProductModel {
     height: number
     width: number
     price: number,
-    rating: number
+    rating: number,
+    createdAt: string,
+    localId: string
 }
-
 
 const COLLECTION_KEY = "products"
 
@@ -40,7 +41,7 @@ export const getProductList = async () => {
     await getDocs(collection(dataBase, COLLECTION_KEY))
         .then((snapshot) => {
             snapshot.forEach((doc) => {
-                resultList.push({...doc.data(), id: doc.id} as ProductModel)
+                resultList.push({...doc.data(), id: doc.id, price: doc.data().price * 100} as ProductModel)
             })
         }).catch((reason) => {
             console.error(reason)

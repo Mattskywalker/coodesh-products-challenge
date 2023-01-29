@@ -17,11 +17,13 @@ export default function ListItens() {
       {
         !loading &&
         <FlatList
+          removeClippedSubviews
+          initialNumToRender={4}
           paddingX={1}
           ListFooterComponent={() => <>{!(productLimit >= AllProducts.length) && <Spinner size={'lg'} colorScheme={'black'} />}</>}
           scrollEventThrottle={30}
           onEndReachedThreshold={0.01}
-          onEndReached={() => { setProductLimit(value => value + 7) }}
+          onEndReached={() => {( productLimit <= products.length) && setProductLimit(value => value + 7) }}
           data={products}
           renderItem={(prop) => <Card addPermission product={prop.item} key={prop.index} />}
         />

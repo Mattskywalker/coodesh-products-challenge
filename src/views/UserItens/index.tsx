@@ -9,7 +9,7 @@ import { Navigate } from '../../types';
 
 import { UserProductsContext } from '../../context/UserProductsProvider';
 
-export default function UserProductList() {
+export default function UserItens() {
 
   const navigation = useNavigation();
   const goTo = navigation.navigate as Navigate;
@@ -23,7 +23,7 @@ export default function UserProductList() {
         !loading && products.length === 0 &&
           <Stack p={18} style={{ alignItems: 'center', justifyContent: 'center', height: '100%' }} >
             <Text variant={'h5'} style={{ textAlign: 'center' }} >Você ainda não possui produtos na lista.</Text>
-            <TouchableOpacity onPress={() => { goTo('Itens') }} style={{ padding: 18, backgroundColor: '#FEFEFE', borderRadius: 30, marginTop: 18 }} >
+            <TouchableOpacity onPress={() => { goTo('Itens', {}) }} style={{ padding: 18, backgroundColor: '#FEFEFE', borderRadius: 30, marginTop: 18 }} >
               <Text variant='subtitle1' >Ir para lista de produtos</Text>
             </TouchableOpacity>
             <Image mt={28} w={180} h={180} source={require('../../assets/apple.png')} alt={'no products'} />
@@ -34,7 +34,8 @@ export default function UserProductList() {
         <FlatList
           paddingX={1}
           data={products}
-          renderItem={(prop) => <Card deletePermission editPermission product={prop.item} key={prop.index} />}
+          renderItem={(prop) => <Card deletePermission editPermission product={prop.item} 
+          key={prop.item.localId} />}
         />
       }
       {
