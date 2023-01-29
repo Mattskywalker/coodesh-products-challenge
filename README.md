@@ -21,5 +21,5 @@ logo que ler o qr o aplicativo será aberto no seu dispositivo movel,
 
 ## observações:
  
-devido a falta de tempo algumas funcionalidades como o rating não foram implementadas
+devido a falta de tempo algumas funcionalidades como o rating não foram implementadas,
 demonstração: [clique aqui](https://drive.google.com/file/d/11wTLdCPr_B9oTvqYN3tHUvmvtI4HMnhS/view) para ver demonstração do app
