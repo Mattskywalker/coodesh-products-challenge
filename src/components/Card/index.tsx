@@ -100,7 +100,7 @@ function Card({ product, loading = false, deletePermission = false, editPermissi
         <Stack style={styles.infoArea} >
           <HStack style={{ justifyContent: 'space-between', alignItems: 'center', width: '100%' }} w={'100%'}>
             <Stack maxW={'70%'} overflow='hidden' >
-              {!loading && <Text lineBreakMode='tail' variant='h5' >{product?.title}</Text>}
+              {!loading && <Text lineBreakMode='tail' variant='h5' >{`${product?.title[0].toUpperCase()}${product?.title.substring(1)}`}</Text>}
               {loading && <Skeleton w={180} h={8} />}
               {!loading && <Text variant='h6' style={{ fontWeight: 'bold' }}>{product?.type}</Text>}
               {loading && <Skeleton w={90} h={4} />}
