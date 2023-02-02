@@ -35,7 +35,7 @@ export default function UserItens() {
           paddingX={1}
           data={products}
           renderItem={(prop) => <Card deletePermission editPermission product={prop.item} 
-          key={prop.item.localId} />}
+          key={prop.item.id} />}
         />
       }
       {

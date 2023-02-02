@@ -1,34 +1,34 @@
 import { StyleSheet, ScrollView} from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import Card from '../../components/Card';
 import Page from '../../layouts/Page';
-import { FlatList, Spinner } from 'native-base';
+import { Button, FlatList, Spinner } from 'native-base';
 import { ProductsContext } from '../../context/ProductsProvider';
 
 export default function ListItens() {
 
-  const {AllProducts, loading} = useContext(ProductsContext)
-  const [productLimit, setProductLimit] = useState(7)
-  const products = AllProducts.slice(0, productLimit);
-
+  const {AllProducts, loading, fetchProducts, isSearching} = useContext(ProductsContext);
+  const productListEmpty = AllProducts.length === 0;
 
   return (
     <Page title='Lista de produtos' >
+      {/* <Button onPress={() => {fetchProducts()}} >More {AllProducts.length}</Button> */}
       {
-        !loading &&
+        !productListEmpty &&
         <FlatList
+          keyExtractor={item => item.id.toString()}
           removeClippedSubviews
-          initialNumToRender={4}
-          paddingX={1}
-          ListFooterComponent={() => <>{!(productLimit >= AllProducts.length) && <Spinner size={'lg'} colorScheme={'black'} />}</>}
-          scrollEventThrottle={30}
+          // initialNumToRender={4}
+          paddingX={1} 
+          ListFooterComponent={() => <>{loading && <Spinner margin={4} size={'lg'} colorScheme={'black'} />}</>}
+          // scrollEventThrottle={30}
           onEndReachedThreshold={0.01}
-          onEndReached={() => {( productLimit <= products.length) && setProductLimit(value => value + 7) }}
-          data={products}
+          onEndReached={() => !isSearching && fetchProducts()}
+          data={AllProducts}
           renderItem={(prop) => <Card addPermission product={prop.item} key={prop.index} />}
         />
       }
-      {loading &&
+      {loading && productListEmpty &&
         <ScrollView style={{ paddingHorizontal: 2 }} >
 
           {Array.from({ length: 8 }).map((_, index) => (
