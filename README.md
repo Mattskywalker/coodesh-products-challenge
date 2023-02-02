@@ -14,6 +14,18 @@
  
  com as dependencias instaladas, execute o comando:
  ```expo start```
+ depois disso crie um arquivo chamado .env
+ e cole essas variaveis de ambiente, são necessarias para realizar a comunicação com o firebase
+ 
+ ```
+APIKEY=AIzaSyC2nu_WI5MMpl66c4FzKG47Q6rCY8vtMGg
+AUTHDOMAIN=products-coodesh-e062a.firebaseapp.com
+DATABASEURL=https://products-coodesh-e062a-default-rtdb.firebaseio.com
+PROJECTID=products-coodesh-e062a
+STORAGEBUCKET=products-coodesh-e062a.appspot.com
+MESSAGINGSENDERID=709430790426
+APPID=1:709430790426:web:4020d1e12a98d99f2a84a3
+ ```
 logo em seguinda você verá um QR code no prompt de comando que poderá ser lido com
 o aplicativo e no IOS com a camera [EXPO GO](https://expo.dev/client)
 
