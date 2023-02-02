@@ -8,6 +8,7 @@ import { UserProductsContext } from '../../context/UserProductsProvider';
 import AlertModal from '../AlertModal';
 import { useNavigation } from '@react-navigation/native';
 import { Navigate } from '../../types';
+import RattingStars from '../RatingStars';
 
 interface CardProps {
   product?: ProductModel,
@@ -19,6 +20,7 @@ interface CardProps {
 
 function Card({ product, loading = false, deletePermission = false, editPermission = false, addPermission = false }: CardProps) {
 
+  // loading = true;
   const goTo = useNavigation().navigate as Navigate
   const toast = useToast();
   const { saveProduct, removeProduct } = useContext(UserProductsContext);
@@ -167,13 +169,7 @@ function Card({ product, loading = false, deletePermission = false, editPermissi
             </Stack>
           </HStack>
           <HStack style={{ justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingRight: 16 }} >
-            <HStack>
-              <Icon color={loading ? "#EDEDED" : "#6558F5"} name='star' size={16} />
-              <Icon color={loading ? "#EDEDED" : "#6558F5"} name='star' size={16} />
-              <Icon color={loading ? "#EDEDED" : "#6558F5"} name='star' size={16} />
-              <Icon color={loading ? "#EDEDED" : "#6558F5"} name='star' size={16} />
-              <Icon color={loading ? "#EDEDED" : "#6558F5"} name='star' size={16} />
-            </HStack>
+            <RattingStars loading={loading} rating={product?.rating} />
             {!loading && <Text variant='h5' >{`R$ ${fcurrency(product?.price && product?.price / 100)}`}</Text>}
             {loading && <Skeleton width={78} height={8} />}
           </HStack>
