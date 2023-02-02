@@ -22,7 +22,6 @@ import { UserProductsContext } from '../../context/UserProductsProvider';
 const schema = yup.object().shape({
   title: yup.string().required('O titulo do produto é obrigatório').trim(),
   type: yup.string().required('O titulo do produto é obrigatório').trim(),
-  description: yup.string().required('O titulo do produto é obrigatório').trim(),
   price: yup.string().required('O titulo do produto é obrigatório'),
 })
 
@@ -121,7 +120,7 @@ export default function EditPage() {
               </Stack>
 
               <Stack flex={1} pl={1} >
-                <TextInput label='Nome do produto'
+                <TextInput label='Valor do produto'
                   value={fcurrency(values.price / 100, 'R$ ')}
                   onChangeText={(e) => {
                     handleChange('price')(fCurrencyToNumber(e).toString())
