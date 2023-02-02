@@ -18,6 +18,7 @@ import { fcurrency, fCurrencyToNumber } from '../../utils/formatNumber';
 import { Form, FormikProvider, useFormik } from "formik";
 import * as yup from "yup";
 import { UserProductsContext } from '../../context/UserProductsProvider';
+import RattingStars from '../../components/RatingStars';
 
 const schema = yup.object().shape({
   title: yup.string().required('O titulo do produto é obrigatório').trim(),
@@ -110,6 +111,9 @@ export default function EditPage() {
         </Stack>
         <ScrollView width={'100%'} paddingX={2} pt={2}>
           <FormikProvider value={formik} >
+            <Stack pt={2} pb={5} justifyContent={'center'} alignItems={'center'} >
+              <RattingStars onChange={handleChange('rating')} size={36} rating={values.rating} />
+            </Stack>
             <TextInput color={errors.title ? 'red' : 'black'} label='Nome do produto' value={values.title} onChangeText={handleChange('title')} inputStyle={{ fontSize: 24 }} />
             <HelperText message={errors.title} color='red' isVisible={!!errors.title} />
 
