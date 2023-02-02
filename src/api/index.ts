@@ -54,7 +54,6 @@ export const getProductList = async ({ limit, offset }: queryProps) => {
     await getDocs(dbQuery)
         .then((snapshot) => {
             snapshot.forEach((doc) => {
-                console.log(doc.data())
                 resultList.push({ ...doc.data(), id: doc.id, price: doc.data().price * 100 } as ProductModel)
             })
         }).catch((reason) => {
