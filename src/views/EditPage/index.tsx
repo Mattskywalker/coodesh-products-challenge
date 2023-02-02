@@ -21,8 +21,8 @@ import { UserProductsContext } from '../../context/UserProductsProvider';
 
 const schema = yup.object().shape({
   title: yup.string().required('O titulo do produto é obrigatório').trim(),
-  type: yup.string().required('O titulo do produto é obrigatório').trim(),
-  price: yup.string().required('O titulo do produto é obrigatório'),
+  type: yup.string().required('O tipo do produto é obrigatório').trim(),
+  price: yup.string().required('O preço do produto é obrigatório'),
 })
 
 export default function EditPage() {
