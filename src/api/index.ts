@@ -1,5 +1,5 @@
 import { dataBase } from './firebase'
-import { collection, getDocs, addDoc, getDoc, doc} from "firebase/firestore"
+import { collection, getDocs, addDoc, getDoc, doc, query, orderBy, limit as docsLimit, startAt, where,  } from "firebase/firestore"
 
 export interface ProductModel {
     id: string;
@@ -12,7 +12,7 @@ export interface ProductModel {
     price: number,
     rating: number,
     createdAt: string,
-    localId: string
+    page: number
 }
 
 const COLLECTION_KEY = "products"
@@ -36,12 +36,26 @@ export const getProduct = async (id: string) => {
 
 }
 
-export const getProductList = async () => {
+export interface queryProps {
+    limit: number,
+    offset: number
+}
+
+export const getProductList = async ({ limit, offset }: queryProps) => {
     const resultList: ProductModel[] = [];
-    await getDocs(collection(dataBase, COLLECTION_KEY))
+    const docsRef = collection(dataBase, COLLECTION_KEY);
+
+    const dbQuery = query(docsRef,
+        orderBy('page'),
+        startAt(offset),
+        docsLimit(limit)
+    )
+
+    await getDocs(dbQuery)
         .then((snapshot) => {
             snapshot.forEach((doc) => {
-                resultList.push({...doc.data(), id: doc.id, price: doc.data().price * 100} as ProductModel)
+                console.log(doc.data())
+                resultList.push({ ...doc.data(), id: doc.id, price: doc.data().price * 100 } as ProductModel)
             })
         }).catch((reason) => {
             console.error(reason)
@@ -49,4 +63,31 @@ export const getProductList = async () => {
     return resultList;
 }
 
-export default { getProduct, getProductList, saveProduct }
+interface searchProps {
+    queryString: string,
+    limit: number,
+    offset?: number
+}
+
+export const search = async ({ limit, offset, queryString }: searchProps) => {
+    const resultList: ProductModel[] = [];
+    const docsRef = collection(dataBase, COLLECTION_KEY);
+
+    const dbQuery = query(docsRef,
+        docsLimit(limit),
+        where('title', '>=', queryString.toLowerCase()),
+        where('title', '<=', queryString.toLowerCase() + '~')
+    )
+
+    await getDocs(dbQuery)
+        .then(async (snapshot) => {
+            snapshot.forEach((doc) => {             
+                resultList.push({ ...doc.data(), id: doc.id, price: doc.data().price * 100 } as ProductModel)
+            })
+        }).catch((reason) => {
+            console.error(reason)
+        })
+    return resultList;
+}
+
+export default { getProduct, getProductList, saveProduct, search }

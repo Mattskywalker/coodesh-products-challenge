@@ -16,8 +16,8 @@ export interface ProductDatabaseScheme {
   width: number
   price: number,
   rating: number,
-  createdAt: string
-  localId: string,
+  createdAt: string,
+  page: number
 }
 
 interface ProductContextValues {
@@ -60,7 +60,11 @@ export default function UserProductsProvider({ children }: Props) {
 
   async function saveProduct(product: ProductModel) {
 
-    const newDataBaseObject: ProductDatabaseScheme = { ...product, createdAt: new Date().toISOString() }
+    const newDataBaseObject: ProductDatabaseScheme = {
+      ...product,
+      createdAt: new Date().toISOString(),
+      // id: new Date().getTime().toString()
+    }
 
     const productList = await getProductList();
     const existThisProduct = (productList?.filter((data) => data.id === product.id) || []).length > 0;
